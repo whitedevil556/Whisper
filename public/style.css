@@ -1,275 +1,75 @@
-:root {
-    color-scheme: dark;
-}
-
-* { 
-    margin: 0; padding: 0; box-sizing: border-box; 
-    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; 
-    -webkit-tap-highlight-color: transparent;
-    user-select: none;
-}
-
-body { 
-    background: #140111 !important;
-    color: #ffffff !important;
-    height: 100vh; height: 100dvh;
-    display: flex; justify-content: center; align-items: center; overflow: hidden;
-}
-
+:root { color-scheme: dark; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; user-select: none; }
+body { background: #1a1a2e; height: 100vh; height: 100dvh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 .hidden { display: none !important; }
 
-/* ==========================================
-   1. DECOY CALCULATOR SCREEN
-   ========================================== */
-.calc-screen {
-    position: fixed; inset: 0; background: #0d0d11; z-index: 2000;
-    display: flex; justify-content: center; align-items: center;
-}
-.calc-box {
-    width: 100%; max-width: 380px; height: 100%; max-height: 700px;
-    padding: 24px; display: flex; flex-direction: column; justify-content: flex-end;
-    background: #121318;
-}
-.calc-top-bar {
-    display: flex; justify-content: space-between; color: #6c757d;
-    font-size: 13px; margin-bottom: auto; padding-top: 10px;
-}
-.calc-display {
-    color: #ffffff !important; font-size: 52px; font-weight: 300;
-    text-align: right; padding: 20px 10px; margin-bottom: 15px;
-    word-break: break-all; border-bottom: 1px solid #2b2d38;
-}
-.calc-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
-}
-.c-btn {
-    height: 68px; border-radius: 34px; border: none; font-size: 24px;
-    background: #22252d; color: #ffffff !important; cursor: pointer;
-    transition: transform 0.1s, background 0.15s;
-}
-.c-btn:active { transform: scale(0.92); background: #343844; }
-.c-ac { background: #3b232a; color: #ff6b8b !important; }
-.c-op { background: #292d3e; color: #72efdd !important; font-weight: bold; }
-.c-eq { background: #ff9f1c; color: #000000 !important; font-weight: bold; }
-.c-zero { grid-column: span 2; }
+/* 🎮 DECOY GAME SCREEN (Tic Tac Toe) */
+.game-screen { position: fixed; inset: 0; background: #16213e; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 2000; color: white; }
+.game-title { font-size: 32px; color: #0f3460; text-shadow: -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 1px 1px 0 #fff; margin-bottom: 10px; padding: 10px; cursor: pointer; }
+.game-status { font-size: 18px; margin-bottom: 20px; color: #e94560; font-weight: bold; }
+.game-board { display: grid; grid-template-columns: repeat(3, 100px); grid-gap: 10px; margin-bottom: 30px; }
+.cell { width: 100px; height: 100px; background: #0f3460; display: flex; justify-content: center; align-items: center; font-size: 48px; font-weight: bold; color: white; border-radius: 12px; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.4), inset -4px -4px 8px rgba(255,255,255,0.1); cursor: pointer; }
+.reset-game-btn { padding: 12px 24px; background: #e94560; color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 15px rgba(233, 69, 96, 0.4); cursor: pointer; }
 
-/* ==========================================
-   2. SETUP MODAL
-   ========================================== */
-.setup-modal {
-    position: fixed; inset: 0; background: rgba(20, 2, 18, 0.96);
-    backdrop-filter: blur(20px); z-index: 1500; display: flex;
-    justify-content: center; align-items: center; padding: 20px;
-}
-.setup-card {
-    background: linear-gradient(145deg, #2b0625, #180215);
-    border: 1px solid #ff4d88; padding: 26px; border-radius: 22px;
-    width: 100%; max-width: 370px; text-align: center;
-    box-shadow: 0 12px 45px rgba(255, 20, 100, 0.35);
-}
-.setup-card h2 { font-size: 21px; color: #ff85a2 !important; margin-bottom: 6px; }
-.sub-text { font-size: 12px; color: #f8c8dc !important; margin-bottom: 16px; }
-.setup-card input {
-    width: 100%; padding: 12px 14px; margin-bottom: 11px; border-radius: 12px;
-    border: 1px solid #7a1c54; background: #12010f !important;
-    color: #ffffff !important; outline: none; font-size: 14px;
-}
-.setup-card input::placeholder { color: #b57c9e !important; }
-.setup-card input:focus { border-color: #ff2a85; box-shadow: 0 0 8px rgba(255,42,133,0.5); }
-.db-config { text-align: left; font-size: 12px; margin-bottom: 12px; color: #ffb3c6; }
-.db-config summary { cursor: pointer; margin-bottom: 8px; }
-#enter-chat-btn {
-    width: 100%; padding: 13px; border: none; border-radius: 14px;
-    background: linear-gradient(135deg, #ff0a54, #b5179e);
-    color: #ffffff !important; font-weight: bold; font-size: 16px;
-    cursor: pointer; box-shadow: 0 4px 15px rgba(255, 10, 84, 0.4);
-}
+/* 🔒 SETUP MODAL (3D Glass) */
+.setup-modal { position: fixed; inset: 0; background: rgba(10, 10, 15, 0.9); backdrop-filter: blur(15px); z-index: 1500; display: flex; justify-content: center; align-items: center; padding: 20px; }
+.setup-card { background: linear-gradient(145deg, #2a0825, #160312); padding: 30px; border-radius: 24px; width: 100%; max-width: 360px; text-align: center; box-shadow: 8px 8px 16px rgba(0,0,0,0.6), -8px -8px 16px rgba(255,20,100,0.1); border: 1px solid rgba(255,20,100,0.2); }
+.setup-card h2 { font-size: 24px; color: #ff2a85; margin-bottom: 10px; }
+.sub-text { font-size: 12px; color: #ffb3c6; margin-bottom: 20px; }
+.setup-card input { width: 100%; padding: 14px; margin-bottom: 15px; border-radius: 12px; border: none; background: #0d010b; color: white; outline: none; font-size: 15px; box-shadow: inset 3px 3px 6px rgba(0,0,0,0.8), inset -3px -3px 6px rgba(255,255,255,0.05); }
+.setup-card input:focus { box-shadow: inset 3px 3px 6px rgba(0,0,0,0.8), inset -3px -3px 6px rgba(255,42,133,0.3); }
+#enter-chat-btn { width: 100%; padding: 15px; border: none; border-radius: 12px; background: linear-gradient(145deg, #ff0a54, #b5179e); color: white; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 5px 5px 10px rgba(0,0,0,0.5), -2px -2px 10px rgba(255,10,84,0.3); }
 
-/* ==========================================
-   3. ROMANTIC CHAT CONTAINER & BACKGROUND
-   ========================================== */
-.app-container {
-    width: 100%; max-width: 440px; height: 100vh; height: 100dvh;
-    display: flex; flex-direction: column; position: relative;
-    /* Rich Romantic Velvet Background */
-    background: radial-gradient(circle at top right, #4a0e3d 0%, #24031f 55%, #120110 100%) !important;
-    border: 1px solid rgba(255, 105, 180, 0.2);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
-}
-@media(min-width: 460px) { .app-container { height: 94vh; border-radius: 24px; overflow: hidden; } }
+/* 📱 3D APP CONTAINER & HEADER */
+.app-container { width: 100%; max-width: 440px; height: 100vh; height: 100dvh; display: flex; flex-direction: column; background: #140511; box-shadow: inset 10px 10px 20px rgba(0,0,0,0.8), inset -10px -10px 20px rgba(255,20,100,0.05); }
+@media(min-width: 460px) { .app-container { height: 95vh; border-radius: 30px; border: 4px solid #2a0825; box-shadow: 15px 15px 30px rgba(0,0,0,0.8), -5px -5px 20px rgba(255,20,100,0.15); } }
+.chat-header { background: #1c0517; padding: 15px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 10; border-bottom: 1px solid #3b0a2c; }
+.user-info { display: flex; align-items: center; gap: 12px; }
+.avatar { width: 46px; height: 46px; background: linear-gradient(145deg, #ff0a54, #9d4edd); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 22px; box-shadow: 3px 3px 8px rgba(0,0,0,0.5), -2px -2px 6px rgba(255,10,84,0.4); }
+.details h2 { font-size: 17px; color: white; font-weight: bold; }
+.details p { font-size: 12px; color: #ff85a2; }
+.header-actions button { background: #2a0825; border: none; color: white; font-size: 18px; width: 40px; height: 40px; border-radius: 50%; box-shadow: 3px 3px 6px rgba(0,0,0,0.4), -2px -2px 4px rgba(255,255,255,0.05); cursor: pointer; margin-left: 8px; }
 
-/* Header */
-.chat-header {
-    background: rgba(28, 3, 24, 0.9) !important;
-    padding: 13px 16px; display: flex; justify-content: space-between; align-items: center;
-    border-bottom: 1px solid rgba(255, 77, 136, 0.25); backdrop-filter: blur(12px);
-}
-.user-info { display: flex; align-items: center; gap: 11px; }
-.avatar {
-    width: 44px; height: 44px; background: linear-gradient(135deg, #ff0a54, #9d4edd);
-    border-radius: 50%; display: flex; justify-content: center; align-items: center;
-    font-size: 20px; box-shadow: 0 0 12px rgba(255, 10, 84, 0.6);
-}
-.details h2 { font-size: 16px; color: #ffffff !important; font-weight: 600; }
-.details p { font-size: 11.5px; color: #ff85a2 !important; font-weight: 500; }
-.header-actions button {
-    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
-    color: #ffffff !important; font-size: 16px; width: 34px; height: 34px;
-    border-radius: 50%; cursor: pointer; margin-left: 6px;
-}
-.header-actions button.burn-active {
-    background: #ff0a54; box-shadow: 0 0 10px #ff0a54;
-}
+/* 💬 3D MESSAGE BUBBLES */
+.chat-box { flex: 1; padding: 18px; overflow-y: auto; display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth; background-image: radial-gradient(circle, rgba(255,20,100,0.03) 2px, transparent 2px); background-size: 20px 20px; }
+.security-banner { background: #2b0625; border: 1px solid #ff4d88; color: #ffd6e0; font-size: 12px; text-align: center; padding: 10px; border-radius: 12px; box-shadow: inset 2px 2px 5px rgba(0,0,0,0.5); }
+.message { max-width: 82%; padding: 12px 16px; border-radius: 20px; position: relative; font-size: 15.5px; line-height: 1.4; word-wrap: break-word; cursor: pointer; transition: transform 0.1s; }
+.message:active { transform: scale(0.97); }
 
-/* Romantic Chat Box with Floating Hearts Pattern */
-.chat-box {
-    flex: 1; padding: 16px; overflow-y: auto; display: flex;
-    flex-direction: column; gap: 12px; scroll-behavior: smooth;
-    background-image: url('data:image/svg+xml;utf8,<svg width="45" height="45" viewBox="0 0 24 24" fill="rgba(255, 77, 136, 0.05)" stroke="rgba(255, 182, 193, 0.07)" stroke-width="1" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>');
-}
-.security-banner {
-    background: rgba(74, 14, 61, 0.85) !important;
-    border: 1px solid rgba(255, 133, 162, 0.4);
-    color: #ffd6e0 !important; font-size: 11.5px; text-align: center;
-    padding: 8px 12px; border-radius: 12px; margin-bottom: 6px;
-}
+.received { background: #22081d; color: white; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #4a0e3d; box-shadow: 4px 4px 10px rgba(0,0,0,0.6), -2px -2px 8px rgba(255,255,255,0.03), inset 1px 1px 2px rgba(255,255,255,0.05); }
+.sent { background: linear-gradient(145deg, #c9184a, #800f2f); color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 4px 4px 10px rgba(0,0,0,0.6), -2px -2px 8px rgba(255,10,84,0.2), inset 1px 1px 2px rgba(255,255,255,0.2); }
+.message p { text-shadow: 0 1px 2px rgba(0,0,0,0.4); }
+.sender-label { font-size: 11px; color: #ffb3c6; font-weight: bold; margin-bottom: 4px; display: block; }
+.time { font-size: 11px; color: rgba(255,255,255,0.7); display: block; margin-top: 6px; text-align: right; }
+.ticks { margin-left: 5px; font-weight: bold; }
+.tick-pink { color: #72efdd; text-shadow: 0 0 5px #72efdd; }
 
-/* ==========================================
-   4. HIGH-CONTRAST ROMANTIC MESSAGE BUBBLES
-   ========================================== */
-.message {
-    max-width: 82%; padding: 10px 14px; border-radius: 18px;
-    position: relative; font-size: 15px; line-height: 1.45;
-    word-wrap: break-word; cursor: pointer;
-    animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-@keyframes popIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+/* ⌨️ FIXED & 3D INPUT AREA */
+.chat-input-area { padding: 12px 15px; background: #140511; display: flex; align-items: center; gap: 10px; border-top: 1px solid #3b0a2c; box-shadow: 0 -4px 15px rgba(0,0,0,0.6); z-index: 10; }
+.icon-btn { background: none; border: none; font-size: 24px; cursor: pointer; color: white; flex-shrink: 0; }
+.input-wrapper { flex: 1; display: flex; border-radius: 25px; background: #0d010b; box-shadow: inset 4px 4px 8px rgba(0,0,0,0.8), inset -2px -2px 6px rgba(255,255,255,0.03); padding: 2px; }
+#msg-input { width: 100%; background: transparent; border: none; padding: 14px 16px; color: white; outline: none; font-size: 15.5px; user-select: text; }
+#msg-input::placeholder { color: #8c4a73; }
 
-/* Samorchya Vyaktiche Message (Dark Royal Plum + Crisp White Text) */
-.received {
-    background: #3b0d36 !important;
-    border: 1px solid #8c2677 !important;
-    color: #ffffff !important;
-    align-self: flex-start;
-    border-bottom-left-radius: 4px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+/* BIG 3D SEND BUTTON */
+.send-btn { 
+    background: linear-gradient(145deg, #ff0a54, #b5179e); 
+    width: 50px; height: 50px; border-radius: 50%; 
+    display: flex; justify-content: center; align-items: center; 
+    font-size: 20px; color: white; flex-shrink: 0;
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.6), -2px -2px 8px rgba(255,10,84,0.3), inset 2px 2px 4px rgba(255,255,255,0.3);
+    transition: transform 0.1s;
 }
+.send-btn:active { transform: scale(0.9); box-shadow: inset 4px 4px 10px rgba(0,0,0,0.6); }
 
-/* Aaple Sent Message (Romantic Rose-Crimson + Crisp White Text) */
-.sent {
-    background: linear-gradient(135deg, #e00751, #9e004f) !important;
-    border: 1px solid rgba(255, 153, 187, 0.35) !important;
-    color: #ffffff !important;
-    align-self: flex-end;
-    border-bottom-right-radius: 4px;
-    box-shadow: 0 4px 14px rgba(224, 7, 81, 0.45);
-}
-
-.message p {
-    color: #ffffff !important;
-    font-weight: 400;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
-}
-
-.sender-label {
-    font-size: 11px; color: #ff99bb !important; font-weight: bold;
-    margin-bottom: 4px; display: block;
-}
-
-.quoted-box {
-    background: rgba(0, 0, 0, 0.35) !important;
-    border-left: 3px solid #ff85a2; padding: 5px 8px;
-    border-radius: 6px; font-size: 12px; color: #ffd6e0 !important;
-    margin-bottom: 6px;
-}
-
-/* Reaction Badge */
-.reaction-badge {
-    position: absolute; bottom: -10px; right: 10px;
-    background: #2b0625; border: 1px solid #ff4d88;
-    border-radius: 12px; padding: 1px 6px; font-size: 13px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
-}
-
-/* Romantic Custom Badge Stickers */
-.romantic-sticker-badge {
-    display: inline-block; padding: 10px 18px; border-radius: 20px;
-    background: linear-gradient(135deg, #ff0a54, #7209b7) !important;
-    color: #ffffff !important; font-weight: bold; font-size: 16px;
-    border: 2px solid #ffb3c6; box-shadow: 0 5px 15px rgba(255,10,84,0.5);
-    animation: pulseSticker 1.8s infinite alternate;
-}
-@keyframes pulseSticker { from { transform: scale(1); } to { transform: scale(1.05); } }
-
-.chat-img { max-width: 100%; border-radius: 12px; margin-top: 4px; display: block; }
-.time { font-size: 10.5px; color: #ffd6e0 !important; display: block; margin-top: 4px; text-align: right; }
-
-.ticks { margin-left: 4px; font-size: 12.5px; font-weight: bold; }
-.tick-gray { color: rgba(255, 255, 255, 0.7) !important; }
-.tick-pink { color: #72efdd !important; text-shadow: 0 0 8px #72efdd; }
-
-/* Reply Bar */
-.reply-bar {
-    background: #2b0625 !important; border-top: 1px solid #ff4d88;
-    padding: 8px 14px; display: flex; justify-content: space-between; align-items: center;
-    font-size: 12.5px; color: #ffb3c6 !important;
-}
-.reply-bar button { background: none; border: none; color: #ffffff; font-size: 16px; cursor: pointer; }
-
-/* ==========================================
-   5. INPUT AREA (100% Clear Typing Text)
-   ========================================== */
-.chat-input-area {
-    padding: 10px 12px; background: #1a0216 !important;
-    display: flex; align-items: center; gap: 8px;
-    border-top: 1px solid rgba(255, 77, 136, 0.25);
-}
-.icon-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #ffffff !important; }
-#msg-input {
-    flex: 1; padding: 12px 16px; border-radius: 25px;
-    border: 1.5px solid #8c2677 !important;
-    background: #2d0628 !important;
-    color: #ffffff !important;
-    outline: none; font-size: 15px; user-select: text;
-}
-#msg-input::placeholder { color: #d68fb8 !important; }
-#msg-input:focus { border-color: #ff0a54 !important; background: #380732 !important; }
-.send-btn {
-    background: linear-gradient(135deg, #ff0a54, #c9184a) !important;
-    width: 44px; height: 44px; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center;
-    font-size: 18px; color: #ffffff !important;
-    box-shadow: 0 4px 12px rgba(255, 10, 84, 0.5);
-}
-
-/* ==========================================
-   6. EMOJI & STICKER DRAWER
-   ========================================== */
-.extra-panel {
-    background: #1f031b !important; height: 250px; display: flex;
-    flex-direction: column; border-top: 1px solid #ff4d88;
-}
-.tabs { display: flex; background: #140111; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.tabs button {
-    flex: 1; padding: 10px 4px; background: none; border: none;
-    color: #b57c9e !important; font-size: 13px; font-weight: 600; cursor: pointer;
-}
-.tabs button.active { color: #ff85a2 !important; border-bottom: 2.5px solid #ff0a54; }
-.panel-content {
-    flex: 1; overflow-y: auto; padding: 12px; display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 10px;
-    justify-items: center; align-items: center;
-}
-.panel-content.sticker-grid {
-    grid-template-columns: repeat(2, 1fr); gap: 12px;
-}
-.emoji-item { font-size: 27px; cursor: pointer; transition: transform 0.1s; }
-.emoji-item:active { transform: scale(1.3); }
-
-/* Floating Hearts Magic */
+/* EMOJI PANEL */
+.extra-panel { background: #1a0616; height: 260px; display: flex; flex-direction: column; border-top: 1px solid #4a0e3d; }
+.tabs { display: flex; background: #140311; }
+.tabs button { flex: 1; padding: 12px; background: none; border: none; color: #b57c9e; font-size: 16px; border-bottom: 2px solid transparent; }
+.tabs button.active { color: #ff85a2; border-bottom: 2px solid #ff0a54; }
+.panel-content { flex: 1; overflow-y: auto; padding: 15px; display: grid; grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); gap: 12px; justify-items: center; align-items: center; }
+.emoji-item { font-size: 30px; cursor: pointer; }
+.romantic-sticker-badge { padding: 10px 15px; background: #3b0d36; border-radius: 20px; color: white; border: 1px solid #ff4d88; font-weight: bold; box-shadow: 3px 3px 8px rgba(0,0,0,0.5); }
 #hearts-container { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 900; }
-.heart { position: absolute; bottom: -40px; animation: floatUp 3.2s ease-out forwards; }
-@keyframes floatUp {
-    0% { transform: translateY(0) scale(0.6); opacity: 1; }
-    100% { transform: translateY(-95vh) scale(1.6) rotate(-15deg); opacity: 0; }
-}
+.heart { position: absolute; bottom: -40px; animation: floatUp 3s ease-out forwards; }
+@keyframes floatUp { 0% { transform: translateY(0) scale(0.8); opacity: 1; } 100% { transform: translateY(-95vh) scale(1.8) rotate(-15deg); opacity: 0; } }
