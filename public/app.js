@@ -1,8 +1,8 @@
 // =========================================================
 // 1. SUPABASE KEYS (Tuza URL ani Key ithe paste kar)
 // =========================================================
-const DEFAULT_SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL"; 
-const DEFAULT_SUPABASE_KEY = "YOUR_SUPABASE_ANON_PUBLIC_KEY";
+const DEFAULT_SUPABASE_URL = "https://nithcddmdlzudauvcoxy.supabase.co"; 
+const DEFAULT_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5pdGhjZGRtZGx6dWRhdXZjb3h5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQ4MDU2MDQsImV4cCI6MjEwMDM4MTYwNH0.KhVB5EioaSJYw1HBSweA82sI4esfD3H-itWw8uCmuU8";
 
 let supabaseClient = null;
 let realtimeChannel = null;
