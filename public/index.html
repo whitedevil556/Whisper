@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>System Sync</title> <!-- नावही गुप्त ठेवले आहे जेणेकरून ब्राउझर हिस्ट्रीत चॅट नाव दिसणार नाही -->
+    
+    <!-- PWA Setup -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a051d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- CryptoJS (AES-256 End-to-End Encryption) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- Supabase Realtime SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Privacy Blur Shield (अॅप बाहेर गेल्यावर स्क्रीन लपवण्यासाठी) -->
+    <div id="privacy-shield" class="privacy-shield hidden">
+        <div class="shield-box">
+            <span class="lock-icon">🔒</span>
+            <h3>Stealth Lock Active</h3>
+            <p>चॅट अनलॉक करण्यासाठी खाली क्लिक करा</p>
+            <button id="unlock-btn">Unlock Whisper</button>
+        </div>
+    </div>
+
+    <!-- Secret Room Login / Setup Modal -->
+    <div id="setup-modal" class="setup-modal">
+        <div class="setup-card">
+            <h2>✨ Whisper Secret Setup</h2>
+            <p class="sub-text">तुमची Secret Key डेटाबेसमध्ये कुठेही सेव्ह होत नाही.</p>
+            
+            <input type="text" id="my-username" placeholder="तुमचे टोपणनाव (उदा. Raj)" required>
+            <input type="text" id="room-id" placeholder="Secret Room ID (उदा. room777)" required>
+            <input type="password" id="secret-key" placeholder="Secret Encryption PIN (दोघांसाठी सेम)" required>
+            
+            <!-- जर कोडिंगमध्ये Supabase टाकला नसेल तर इथूनही टाकता येईल -->
+            <details class="db-config">
+                <summary>⚙️ Supabase Database Config (Optional)</summary>
+                <input type="text" id="sb-url" placeholder="Supabase Project URL">
+                <input type="password" id="sb-key" placeholder="Supabase Anon Public Key">
+            </details>
+
+            <button id="enter-chat-btn">Enter Secret Chat 🔒</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="user-info">
+                <div class="avatar" id="partner-avatar">❤️</div>
+                <div class="details">
+                    <h2 id="room-title">Whisper Room</h2>
+                    <p id="connection-status">Connecting...</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button id="notify-btn" title="Enable Secret Notifications">🔔</button>
+                <button id="panic-btn" title="Instant Lock (Boss Key)">👁️‍🗨️</button>
+                <button id="clear-btn" title="Clear Screen">🗑️</button>
+                <button id="logout-btn" title="Change Room/Key">⚙️</button>
+            </div>
+        </header>
+        
+        <!-- Encrypted Chat Area -->
+        <main class="chat-box" id="chat-box">
+            <div class="security-banner">
+                🔒 End-to-End Encrypted (AES-256). मूळ मेसेजेस सर्व्हर किंवा डेटाबेसमध्ये सेव्ह होत नाहीत.
+            </div>
+        </main>
+        
+        <!-- Emoji & Sticker Panel -->
+        <div class="extra-panel hidden" id="extra-panel">
+            <div class="tabs">
+                <button id="tab-emoji" class="active">Emojis</button>
+                <button id="tab-sticker">Stickers</button>
+            </div>
+            <div class="panel-content" id="panel-content"></div>
+        </div>
+
+        <!-- Input Area -->
+        <footer class="chat-input-area">
+            <input type="file" id="file-input" accept="image/*" class="hidden">
+            <button class="icon-btn" id="add-file" title="Send Encrypted Photo">📎</button>
+            <button class="icon-btn" id="toggle-emoji">😊</button>
+            <input type="text" id="msg-input" placeholder="Whisper something secret..." autocomplete="off">
+            <button class="icon-btn send-btn" id="send-btn">➤</button>
+        </footer>
+    </div>
+    
+    <!-- Romantic Hearts Effect Container -->
+    <div id="hearts-container"></div>
+    <script src="app.js"></script>
+</body>
+</html>
