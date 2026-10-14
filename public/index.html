@@ -3,98 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>System Sync</title> <!-- नावही गुप्त ठेवले आहे जेणेकरून ब्राउझर हिस्ट्रीत चॅट नाव दिसणार नाही -->
+    <title>CalcPro</title>
     
-    <!-- PWA Setup -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a051d">
+    <meta name="theme-color" content="#1f021e">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <link rel="stylesheet" href="style.css">
-    
-    <!-- CryptoJS (AES-256 End-to-End Encryption) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <!-- Supabase Realtime SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-    <!-- Privacy Blur Shield (अॅप बाहेर गेल्यावर स्क्रीन लपवण्यासाठी) -->
-    <div id="privacy-shield" class="privacy-shield hidden">
-        <div class="shield-box">
-            <span class="lock-icon">🔒</span>
-            <h3>Stealth Lock Active</h3>
-            <p>चॅट अनलॉक करण्यासाठी खाली क्लिक करा</p>
-            <button id="unlock-btn">Unlock Whisper</button>
+
+    <!-- 1. DECOY CALCULATOR SCREEN (Camouflage Lock) -->
+    <div id="calc-screen" class="calc-screen">
+        <div class="calc-box">
+            <div class="calc-top-bar">
+                <span>CalcPro v2.4</span>
+                <span class="calc-hint">Standard</span>
+            </div>
+            <div class="calc-display" id="calc-display">0</div>
+            <div class="calc-grid">
+                <button class="c-btn c-ac" onclick="calcClear()">AC</button>
+                <button class="c-btn c-op" onclick="calcDel()">⌫</button>
+                <button class="c-btn c-op" onclick="calcInput('%')">%</button>
+                <button class="c-btn c-op" onclick="calcInput('/')">÷</button>
+                
+                <button class="c-btn" onclick="calcInput('7')">7</button>
+                <button class="c-btn" onclick="calcInput('8')">8</button>
+                <button class="c-btn" onclick="calcInput('9')">9</button>
+                <button class="c-btn c-op" onclick="calcInput('*')">×</button>
+                
+                <button class="c-btn" onclick="calcInput('4')">4</button>
+                <button class="c-btn" onclick="calcInput('5')">5</button>
+                <button class="c-btn" onclick="calcInput('6')">6</button>
+                <button class="c-btn c-op" onclick="calcInput('-')">−</button>
+                
+                <button class="c-btn" onclick="calcInput('1')">1</button>
+                <button class="c-btn" onclick="calcInput('2')">2</button>
+                <button class="c-btn" onclick="calcInput('3')">3</button>
+                <button class="c-btn c-op" onclick="calcInput('+')">+</button>
+                
+                <button class="c-btn c-zero" onclick="calcInput('0')">0</button>
+                <button class="c-btn" onclick="calcInput('.')">.</button>
+                <button class="c-btn c-eq" onclick="calcEvaluate()">=</button>
+            </div>
         </div>
     </div>
 
-    <!-- Secret Room Login / Setup Modal -->
-    <div id="setup-modal" class="setup-modal">
+    <!-- 2. SECRET ROOM SETUP MODAL -->
+    <div id="setup-modal" class="setup-modal hidden">
         <div class="setup-card">
-            <h2>✨ Whisper Secret Setup</h2>
-            <p class="sub-text">तुमची Secret Key डेटाबेसमध्ये कुठेही सेव्ह होत नाही.</p>
+            <h2>💖 Whisper Romantic Vault</h2>
+            <p class="sub-text">End-to-End Encrypted. Kontahi data original swarupat save hot nahi.</p>
             
-            <input type="text" id="my-username" placeholder="तुमचे टोपणनाव (उदा. Raj)" required>
-            <input type="text" id="room-id" placeholder="Secret Room ID (उदा. room777)" required>
-            <input type="password" id="secret-key" placeholder="Secret Encryption PIN (दोघांसाठी सेम)" required>
+            <input type="text" id="my-username" placeholder="Tumche Romantic Naav (uda. Shona)" required>
+            <input type="text" id="room-id" placeholder="Secret Room ID (uda. love777)" required>
+            <input type="password" id="secret-key" placeholder="Encryption Key (Doghansathi Same)" required>
+            <input type="number" id="calc-pin" placeholder="Calculator Unlock Code (Default: 1430)">
             
-            <!-- जर कोडिंगमध्ये Supabase टाकला नसेल तर इथूनही टाकता येईल -->
             <details class="db-config">
-                <summary>⚙️ Supabase Database Config (Optional)</summary>
+                <summary>⚙️ Database Keys (Optional)</summary>
                 <input type="text" id="sb-url" placeholder="Supabase Project URL">
-                <input type="password" id="sb-key" placeholder="Supabase Anon Public Key">
+                <input type="password" id="sb-key" placeholder="Supabase Anon Key">
             </details>
 
-            <button id="enter-chat-btn">Enter Secret Chat 🔒</button>
+            <button id="enter-chat-btn">Start Romantic Chat ❤️</button>
         </div>
     </div>
 
+    <!-- 3. MAIN ROMANTIC CHAT INTERFACE -->
     <div class="app-container">
-        <!-- Header -->
-        <header class="chat-header">
+        <header class="chat-header" id="chat-header">
             <div class="user-info">
-                <div class="avatar" id="partner-avatar">❤️</div>
+                <div class="avatar" id="partner-avatar">💑</div>
                 <div class="details">
-                    <h2 id="room-title">Whisper Room</h2>
-                    <p id="connection-status">Connecting...</p>
+                    <h2 id="room-title">Secret Love Vault</h2>
+                    <p id="connection-status">🟢 Encrypted & Connected</p>
                 </div>
             </div>
             <div class="header-actions">
-                <button id="notify-btn" title="Enable Secret Notifications">🔔</button>
-                <button id="panic-btn" title="Instant Lock (Boss Key)">👁️‍🗨️</button>
-                <button id="clear-btn" title="Clear Screen">🗑️</button>
-                <button id="logout-btn" title="Change Room/Key">⚙️</button>
+                <button id="burn-btn" title="Self-Destruct Timer (30s)">🔥</button>
+                <button id="notify-btn" title="Stealth Notifications">🔔</button>
+                <button id="panic-btn" title="Hide to Calculator">🧮</button>
+                <button id="logout-btn" title="Vault Settings">⚙️</button>
             </div>
         </header>
         
-        <!-- Encrypted Chat Area -->
         <main class="chat-box" id="chat-box">
             <div class="security-banner">
-                🔒 End-to-End Encrypted (AES-256). मूळ मेसेजेस सर्व्हर किंवा डेटाबेसमध्ये सेव्ह होत नाहीत.
+                💖 AES-256 Encrypted Vault • Double-tap message for ❤️ • Click message to Reply
             </div>
         </main>
+
+        <!-- Reply Preview Bar -->
+        <div id="reply-bar" class="reply-bar hidden">
+            <div class="reply-text" id="reply-text"></div>
+            <button id="cancel-reply">✕</button>
+        </div>
         
-        <!-- Emoji & Sticker Panel -->
+        <!-- Full Emojis & Stickers Panel -->
         <div class="extra-panel hidden" id="extra-panel">
             <div class="tabs">
-                <button id="tab-emoji" class="active">Emojis</button>
-                <button id="tab-sticker">Stickers</button>
+                <button id="tab-love" class="active">❤️ Love</button>
+                <button id="tab-faces">😊 Faces</button>
+                <button id="tab-cute">🙈 Cute</button>
+                <button id="tab-sticker">💌 Stickers</button>
             </div>
             <div class="panel-content" id="panel-content"></div>
         </div>
 
-        <!-- Input Area -->
         <footer class="chat-input-area">
             <input type="file" id="file-input" accept="image/*" class="hidden">
-            <button class="icon-btn" id="add-file" title="Send Encrypted Photo">📎</button>
-            <button class="icon-btn" id="toggle-emoji">😊</button>
-            <input type="text" id="msg-input" placeholder="Whisper something secret..." autocomplete="off">
+            <button class="icon-btn" id="add-file" title="Send Photo">📸</button>
+            <button class="icon-btn" id="toggle-emoji">😍</button>
+            <input type="text" id="msg-input" placeholder="Write something romantic..." autocomplete="off">
             <button class="icon-btn send-btn" id="send-btn">➤</button>
         </footer>
     </div>
     
-    <!-- Romantic Hearts Effect Container -->
     <div id="hearts-container"></div>
     <script src="app.js"></script>
 </body>
