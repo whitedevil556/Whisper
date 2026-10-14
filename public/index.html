@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tic Tac Toe</title>
+    <title>Brick Breaker Arcade</title>
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a1a2e">
+    <meta name="theme-color" content="#0b0e17">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <link rel="stylesheet" href="style.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
@@ -15,76 +16,124 @@
 </head>
 <body>
 
-    <!-- 1. DECOY GAME SCREEN (Tic Tac Toe) -->
+    <!-- 1. BRICK BREAKER ARCADE GAME SCREEN (Camouflage) -->
     <div id="game-screen" class="game-screen">
-        <h2 id="game-title" class="game-title">Tic Tac Toe</h2>
-        <p class="game-status" id="game-status">Player X's Turn</p>
-        <div class="game-board" id="game-board">
-            <div class="cell" data-index="0"></div><div class="cell" data-index="1"></div><div class="cell" data-index="2"></div>
-            <div class="cell" data-index="3"></div><div class="cell" data-index="4"></div><div class="cell" data-index="5"></div>
-            <div class="cell" data-index="6"></div><div class="cell" data-index="7"></div><div class="cell" data-index="8"></div>
+        <div class="game-wrapper">
+            <div class="game-hud" id="game-header-secret">
+                <div class="hud-box">SCORE: <span id="game-score">0</span></div>
+                <div class="hud-title">🧱 BRICK BREAKER</div>
+                <div class="hud-box">LIVES: <span id="game-lives">❤️❤️❤️</span></div>
+            </div>
+            
+            <canvas id="brick-canvas" width="360" height="460"></canvas>
+            
+            <div class="game-controls">
+                <p class="game-hint">Drag finger or mouse left/right to move paddle</p>
+                <div class="game-btns">
+                    <button class="g-btn" id="restart-game-btn">🔄 Restart</button>
+                    <button class="g-btn g-pause" id="pause-game-btn">⏸️ Pause</button>
+                </div>
+            </div>
         </div>
-        <button class="reset-game-btn" onclick="resetGame()">Restart Game</button>
     </div>
 
-    <!-- 2. SECRET SETUP MODAL -->
-    <div id="setup-modal" class="setup-modal hidden">
-        <div class="setup-card">
-            <h2>💖 Secret Vault</h2>
-            <p class="sub-text">Welcome back to the secure dimension.</p>
+    <!-- SECRET LEVEL CODE MODAL (Disguised PIN Entry) -->
+    <div id="pin-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h3>🎮 Enter Level Code</h3>
+            <p class="sub-text">Unlock custom arcade stage</p>
+            <input type="password" id="pin-input" placeholder="Code..." inputmode="numeric">
+            <div class="modal-actions">
+                <button id="pin-cancel" class="m-btn m-cancel">Cancel</button>
+                <button id="pin-submit" class="m-btn m-ok">Load</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. PROFILE & ROOM SETUP MODAL -->
+    <div id="setup-modal" class="modal-overlay hidden">
+        <div class="modal-card">
+            <h2>💖 Profile Setup</h2>
+            <p class="sub-text">Set your details (Fake Code is always 0000)</p>
             <input type="text" id="my-username" placeholder="Tumche Naav (uda. Shona)" required>
-            <input type="text" id="room-id" placeholder="Secret Room ID" required>
-            <input type="password" id="secret-key" placeholder="Encryption PIN" required>
-            <button id="enter-chat-btn">Enter Vault 🔒</button>
+            <input type="text" id="room-id" placeholder="Room ID (uda. love777)" required>
+            <input type="password" id="secret-key" placeholder="Secret Key (Doghansathi Same)" required>
+            <input type="number" id="calc-pin" placeholder="Secret Unlock PIN (Default: 1430)">
+            <button id="enter-chat-btn" class="m-btn m-ok" style="width:100%; margin-top:8px;">Save & Continue ❤️</button>
         </div>
     </div>
 
-    <!-- 3. 3D ROMANTIC CHAT INTERFACE -->
+    <!-- 3. 3D ROMANTIC CHAT INTERFACE (Zero Encryption Mention) -->
     <div class="app-container hidden" id="app-container">
         <header class="chat-header" id="chat-header">
             <div class="user-info">
-                <div class="avatar" id="partner-avatar">💑</div>
+                <div class="avatar" id="partner-avatar">💖</div>
                 <div class="details">
-                    <h2 id="room-title">Secret Room</h2>
-                    <p id="connection-status">🟢 Connected</p>
+                    <h2 id="room-title">My Love</h2>
+                    <p id="connection-status">⚪ Offline</p>
                 </div>
             </div>
             <div class="header-actions">
-                <button id="burn-btn" title="Self-Destruct">🔥</button>
-                <button id="panic-btn" title="Hide to Game">🎮</button>
+                <button id="peek-btn" title="Anti-Peek Privacy Blur">👁️</button>
+                <button id="burn-btn" title="30s Auto-Vanish">🔥</button>
+                <button id="wipe-btn" title="Clear Chat for Both">🧹</button>
+                <button id="notify-btn" title="Notifications">🔔</button>
+                <button id="panic-btn" title="Back to Game">🎮</button>
+                <button id="logout-btn" title="Settings">⚙️</button>
             </div>
         </header>
         
-        <main class="chat-box" id="chat-box">
-            <div class="security-banner">
-                💖 3D Encrypted Vault • Long-press message to Delete for Everyone
-            </div>
-        </main>
+        <main class="chat-box" id="chat-box"></main>
 
+        <!-- Reply / Edit Preview Bar -->
         <div id="reply-bar" class="reply-bar hidden">
             <div class="reply-text" id="reply-text"></div>
             <button id="cancel-reply">✕</button>
         </div>
         
+        <!-- Full Emojis & Stickers Drawer -->
         <div class="extra-panel hidden" id="extra-panel">
-            <div class="tabs">
-                <button id="tab-recent" class="active">🕒</button>
-                <button id="tab-faces">😀</button>
-                <button id="tab-love">❤️</button>
-                <button id="tab-sticker">💌</button>
-            </div>
+            <div class="tabs"></div>
             <div class="panel-content" id="panel-content"></div>
         </div>
 
+        <!-- 3D Input Bar with Fixed Big Send Button -->
         <footer class="chat-input-area">
             <input type="file" id="file-input" accept="image/*" class="hidden">
-            <button class="icon-btn" id="add-file">📸</button>
-            <button class="icon-btn" id="toggle-emoji">😍</button>
+            <button class="icon-btn" id="add-file" title="Send Photo">📸</button>
+            <button class="icon-btn" id="snap-btn" title="1-Time View Snap">👻</button>
+            <button class="icon-btn" id="toggle-emoji" title="Emojis & Stickers">😍</button>
+            
             <div class="input-wrapper">
-                <input type="text" id="msg-input" placeholder="Type a message..." autocomplete="off">
+                <input type="text" id="msg-input" placeholder="Message..." autocomplete="off">
+                <button class="spoiler-toggle" id="spoiler-btn" title="Send as Hidden Spoiler">✨</button>
             </div>
-            <button class="icon-btn send-btn" id="send-btn">➤</button>
+
+            <button class="icon-btn mic-btn" id="mic-btn" title="Record Voice Note">🎤</button>
+            <button class="icon-btn send-btn" id="send-btn" title="Send">➤</button>
         </footer>
+    </div>
+
+    <!-- 4. SNAPCHAT 1-TIME VIEW MODAL -->
+    <div id="snap-modal" class="modal-overlay hidden">
+        <div class="snap-viewer">
+            <div class="snap-top">
+                <span>🔥 1-Time Snap (Auto-Deletes on Close)</span>
+                <button id="close-snap-btn">✕ Close</button>
+            </div>
+            <img id="snap-img" src="" alt="Snap">
+        </div>
+    </div>
+
+    <!-- 5. TELEGRAM MESSAGE ACTION MENU -->
+    <div id="msg-menu-modal" class="modal-overlay hidden">
+        <div class="action-sheet">
+            <button id="menu-reply">↩️ Reply</button>
+            <button id="menu-edit">✏️ Edit Message</button>
+            <button id="menu-copy">📋 Copy Text</button>
+            <button id="menu-delete" class="danger-btn">🗑️ Delete for Everyone</button>
+            <button id="menu-cancel">Cancel</button>
+        </div>
     </div>
     
     <div id="hearts-container"></div>
