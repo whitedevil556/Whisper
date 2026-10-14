@@ -1,14 +1,14 @@
 {
-  "name": "Whisper Secret Sync",
-  "short_name": "Whisper",
+  "name": "CalcPro Utility",
+  "short_name": "CalcPro",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#120214",
-  "theme_color": "#1a051d",
-  "description": "End-to-End Encrypted Stealth PWA",
+  "background_color": "#110112",
+  "theme_color": "#1f021e",
+  "description": "Scientific Calculator & System Utility",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/833/833472.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/2344/2344132.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
