@@ -1,140 +1,275 @@
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+:root {
+    color-scheme: dark;
+}
+
+* { 
+    margin: 0; padding: 0; box-sizing: border-box; 
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif; 
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
 
 body { 
-    background: radial-gradient(circle at center, #3d0a42, #120214); 
-    height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden;
-    background-image: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>');
+    background: #140111 !important;
+    color: #ffffff !important;
+    height: 100vh; height: 100dvh;
+    display: flex; justify-content: center; align-items: center; overflow: hidden;
 }
 
 .hidden { display: none !important; }
 
-/* Privacy Shield & Setup Modal */
-.privacy-shield, .setup-modal {
-    position: fixed; inset: 0; background: rgba(12, 2, 14, 0.92);
-    backdrop-filter: blur(25px); z-index: 999; display: flex;
-    justify-content: center; align-items: center; padding: 20px; color: white;
+/* ==========================================
+   1. DECOY CALCULATOR SCREEN
+   ========================================== */
+.calc-screen {
+    position: fixed; inset: 0; background: #0d0d11; z-index: 2000;
+    display: flex; justify-content: center; align-items: center;
 }
-.shield-box, .setup-card {
-    background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 28px; border-radius: 20px; width: 100%; max-width: 360px;
-    text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+.calc-box {
+    width: 100%; max-width: 380px; height: 100%; max-height: 700px;
+    padding: 24px; display: flex; flex-direction: column; justify-content: flex-end;
+    background: #121318;
 }
-.lock-icon { font-size: 48px; display: block; margin-bottom: 10px; }
-.setup-card h2 { font-size: 20px; margin-bottom: 6px; color: #ff80ab; }
-.sub-text { font-size: 12px; opacity: 0.75; margin-bottom: 18px; }
+.calc-top-bar {
+    display: flex; justify-content: space-between; color: #6c757d;
+    font-size: 13px; margin-bottom: auto; padding-top: 10px;
+}
+.calc-display {
+    color: #ffffff !important; font-size: 52px; font-weight: 300;
+    text-align: right; padding: 20px 10px; margin-bottom: 15px;
+    word-break: break-all; border-bottom: 1px solid #2b2d38;
+}
+.calc-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px;
+}
+.c-btn {
+    height: 68px; border-radius: 34px; border: none; font-size: 24px;
+    background: #22252d; color: #ffffff !important; cursor: pointer;
+    transition: transform 0.1s, background 0.15s;
+}
+.c-btn:active { transform: scale(0.92); background: #343844; }
+.c-ac { background: #3b232a; color: #ff6b8b !important; }
+.c-op { background: #292d3e; color: #72efdd !important; font-weight: bold; }
+.c-eq { background: #ff9f1c; color: #000000 !important; font-weight: bold; }
+.c-zero { grid-column: span 2; }
+
+/* ==========================================
+   2. SETUP MODAL
+   ========================================== */
+.setup-modal {
+    position: fixed; inset: 0; background: rgba(20, 2, 18, 0.96);
+    backdrop-filter: blur(20px); z-index: 1500; display: flex;
+    justify-content: center; align-items: center; padding: 20px;
+}
+.setup-card {
+    background: linear-gradient(145deg, #2b0625, #180215);
+    border: 1px solid #ff4d88; padding: 26px; border-radius: 22px;
+    width: 100%; max-width: 370px; text-align: center;
+    box-shadow: 0 12px 45px rgba(255, 20, 100, 0.35);
+}
+.setup-card h2 { font-size: 21px; color: #ff85a2 !important; margin-bottom: 6px; }
+.sub-text { font-size: 12px; color: #f8c8dc !important; margin-bottom: 16px; }
 .setup-card input {
-    width: 100%; padding: 12px 14px; margin-bottom: 12px; border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4);
-    color: white; outline: none; font-size: 14px;
+    width: 100%; padding: 12px 14px; margin-bottom: 11px; border-radius: 12px;
+    border: 1px solid #7a1c54; background: #12010f !important;
+    color: #ffffff !important; outline: none; font-size: 14px;
 }
-.setup-card input:focus { border-color: #e91e63; }
-.db-config { text-align: left; font-size: 12px; margin-bottom: 14px; opacity: 0.85; }
-.db-config summary { cursor: pointer; margin-bottom: 8px; color: #ffb6c1; }
-#enter-chat-btn, #unlock-btn {
-    width: 100%; padding: 12px; border: none; border-radius: 12px;
-    background: linear-gradient(135deg, #e91e63, #9c27b0); color: white;
-    font-weight: bold; font-size: 15px; cursor: pointer; margin-top: 8px;
+.setup-card input::placeholder { color: #b57c9e !important; }
+.setup-card input:focus { border-color: #ff2a85; box-shadow: 0 0 8px rgba(255,42,133,0.5); }
+.db-config { text-align: left; font-size: 12px; margin-bottom: 12px; color: #ffb3c6; }
+.db-config summary { cursor: pointer; margin-bottom: 8px; }
+#enter-chat-btn {
+    width: 100%; padding: 13px; border: none; border-radius: 14px;
+    background: linear-gradient(135deg, #ff0a54, #b5179e);
+    color: #ffffff !important; font-weight: bold; font-size: 16px;
+    cursor: pointer; box-shadow: 0 4px 15px rgba(255, 10, 84, 0.4);
 }
 
-/* Main App Container */
+/* ==========================================
+   3. ROMANTIC CHAT CONTAINER & BACKGROUND
+   ========================================== */
 .app-container {
-    width: 100%; max-width: 430px; height: 100vh; background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(18px); display: flex; flex-direction: column;
-    border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+    width: 100%; max-width: 440px; height: 100vh; height: 100dvh;
+    display: flex; flex-direction: column; position: relative;
+    /* Rich Romantic Velvet Background */
+    background: radial-gradient(circle at top right, #4a0e3d 0%, #24031f 55%, #120110 100%) !important;
+    border: 1px solid rgba(255, 105, 180, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
 }
-@media(min-width: 450px) { .app-container { height: 92vh; border-radius: 22px; overflow: hidden; } }
+@media(min-width: 460px) { .app-container { height: 94vh; border-radius: 24px; overflow: hidden; } }
 
 /* Header */
 .chat-header {
-    background: rgba(0,0,0,0.45); padding: 14px 16px; display: flex;
-    justify-content: space-between; align-items: center; color: white;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    background: rgba(28, 3, 24, 0.9) !important;
+    padding: 13px 16px; display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid rgba(255, 77, 136, 0.25); backdrop-filter: blur(12px);
 }
-.user-info { display: flex; align-items: center; gap: 10px; }
+.user-info { display: flex; align-items: center; gap: 11px; }
 .avatar {
-    width: 42px; height: 42px; background: linear-gradient(45deg, #e91e63, #9c27b0);
+    width: 44px; height: 44px; background: linear-gradient(135deg, #ff0a54, #9d4edd);
     border-radius: 50%; display: flex; justify-content: center; align-items: center;
-    font-size: 18px; box-shadow: 0 4px 10px rgba(233, 30, 99, 0.35);
+    font-size: 20px; box-shadow: 0 0 12px rgba(255, 10, 84, 0.6);
 }
-.details h2 { font-size: 15px; }
-.details p { font-size: 11px; color: #ff80ab; }
+.details h2 { font-size: 16px; color: #ffffff !important; font-weight: 600; }
+.details p { font-size: 11.5px; color: #ff85a2 !important; font-weight: 500; }
 .header-actions button {
-    background: none; border: none; color: white; font-size: 18px;
-    cursor: pointer; margin-left: 10px; opacity: 0.85;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    color: #ffffff !important; font-size: 16px; width: 34px; height: 34px;
+    border-radius: 50%; cursor: pointer; margin-left: 6px;
+}
+.header-actions button.burn-active {
+    background: #ff0a54; box-shadow: 0 0 10px #ff0a54;
 }
 
-/* Chat Area */
+/* Romantic Chat Box with Floating Hearts Pattern */
 .chat-box {
-    flex: 1; padding: 15px; overflow-y: auto; display: flex;
-    flex-direction: column; gap: 10px; scroll-behavior: smooth;
+    flex: 1; padding: 16px; overflow-y: auto; display: flex;
+    flex-direction: column; gap: 12px; scroll-behavior: smooth;
+    background-image: url('data:image/svg+xml;utf8,<svg width="45" height="45" viewBox="0 0 24 24" fill="rgba(255, 77, 136, 0.05)" stroke="rgba(255, 182, 193, 0.07)" stroke-width="1" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>');
 }
 .security-banner {
-    background: rgba(233, 30, 99, 0.15); border: 1px solid rgba(233, 30, 99, 0.3);
-    color: #ffd1dc; font-size: 11px; text-align: center; padding: 8px 12px;
-    border-radius: 10px; margin-bottom: 8px;
+    background: rgba(74, 14, 61, 0.85) !important;
+    border: 1px solid rgba(255, 133, 162, 0.4);
+    color: #ffd6e0 !important; font-size: 11.5px; text-align: center;
+    padding: 8px 12px; border-radius: 12px; margin-bottom: 6px;
 }
 
-/* Message Bubbles */
+/* ==========================================
+   4. HIGH-CONTRAST ROMANTIC MESSAGE BUBBLES
+   ========================================== */
 .message {
-    max-width: 80%; padding: 10px 14px; border-radius: 18px; color: white;
-    position: relative; font-size: 14.5px; line-height: 1.4; word-wrap: break-word;
-    animation: fadeIn 0.2s ease-out;
+    max-width: 82%; padding: 10px 14px; border-radius: 18px;
+    position: relative; font-size: 15px; line-height: 1.45;
+    word-wrap: break-word; cursor: pointer;
+    animation: popIn 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes popIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+
+/* Samorchya Vyaktiche Message (Dark Royal Plum + Crisp White Text) */
 .received {
-    background: rgba(255, 255, 255, 0.12); align-self: flex-start;
-    border-bottom-left-radius: 4px; border: 1px solid rgba(255,255,255,0.08);
+    background: #3b0d36 !important;
+    border: 1px solid #8c2677 !important;
+    color: #ffffff !important;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
+
+/* Aaple Sent Message (Romantic Rose-Crimson + Crisp White Text) */
 .sent {
-    background: linear-gradient(135deg, #e91e63, #ad1457); align-self: flex-end;
-    border-bottom-right-radius: 4px; box-shadow: 0 3px 10px rgba(233, 30, 99, 0.3);
+    background: linear-gradient(135deg, #e00751, #9e004f) !important;
+    border: 1px solid rgba(255, 153, 187, 0.35) !important;
+    color: #ffffff !important;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 14px rgba(224, 7, 81, 0.45);
 }
-.sender-label { font-size: 10px; color: #ff80ab; font-weight: bold; margin-bottom: 3px; display: block; }
+
+.message p {
+    color: #ffffff !important;
+    font-weight: 400;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.sender-label {
+    font-size: 11px; color: #ff99bb !important; font-weight: bold;
+    margin-bottom: 4px; display: block;
+}
+
+.quoted-box {
+    background: rgba(0, 0, 0, 0.35) !important;
+    border-left: 3px solid #ff85a2; padding: 5px 8px;
+    border-radius: 6px; font-size: 12px; color: #ffd6e0 !important;
+    margin-bottom: 6px;
+}
+
+/* Reaction Badge */
+.reaction-badge {
+    position: absolute; bottom: -10px; right: 10px;
+    background: #2b0625; border: 1px solid #ff4d88;
+    border-radius: 12px; padding: 1px 6px; font-size: 13px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+/* Romantic Custom Badge Stickers */
+.romantic-sticker-badge {
+    display: inline-block; padding: 10px 18px; border-radius: 20px;
+    background: linear-gradient(135deg, #ff0a54, #7209b7) !important;
+    color: #ffffff !important; font-weight: bold; font-size: 16px;
+    border: 2px solid #ffb3c6; box-shadow: 0 5px 15px rgba(255,10,84,0.5);
+    animation: pulseSticker 1.8s infinite alternate;
+}
+@keyframes pulseSticker { from { transform: scale(1); } to { transform: scale(1.05); } }
+
 .chat-img { max-width: 100%; border-radius: 12px; margin-top: 4px; display: block; }
-.time { font-size: 10px; opacity: 0.8; display: block; margin-top: 4px; text-align: right; }
+.time { font-size: 10.5px; color: #ffd6e0 !important; display: block; margin-top: 4px; text-align: right; }
 
-/* Ticks */
-.ticks { margin-left: 4px; font-size: 12px; font-weight: bold; }
-.tick-gray { color: rgba(255,255,255,0.6); }
-.tick-pink { color: #90caf9; text-shadow: 0 0 6px rgba(144, 202, 249, 0.9); }
+.ticks { margin-left: 4px; font-size: 12.5px; font-weight: bold; }
+.tick-gray { color: rgba(255, 255, 255, 0.7) !important; }
+.tick-pink { color: #72efdd !important; text-shadow: 0 0 8px #72efdd; }
 
-/* Input Area */
+/* Reply Bar */
+.reply-bar {
+    background: #2b0625 !important; border-top: 1px solid #ff4d88;
+    padding: 8px 14px; display: flex; justify-content: space-between; align-items: center;
+    font-size: 12.5px; color: #ffb3c6 !important;
+}
+.reply-bar button { background: none; border: none; color: #ffffff; font-size: 16px; cursor: pointer; }
+
+/* ==========================================
+   5. INPUT AREA (100% Clear Typing Text)
+   ========================================== */
 .chat-input-area {
-    padding: 10px 12px; background: rgba(0,0,0,0.5); display: flex;
-    align-items: center; gap: 8px; border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 10px 12px; background: #1a0216 !important;
+    display: flex; align-items: center; gap: 8px;
+    border-top: 1px solid rgba(255, 77, 136, 0.25);
 }
-.icon-btn { background: none; border: none; font-size: 21px; cursor: pointer; color: white; }
+.icon-btn { background: none; border: none; font-size: 22px; cursor: pointer; color: #ffffff !important; }
 #msg-input {
-    flex: 1; padding: 11px 15px; border-radius: 25px;
-    border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.09);
-    color: white; outline: none; font-size: 14.5px;
+    flex: 1; padding: 12px 16px; border-radius: 25px;
+    border: 1.5px solid #8c2677 !important;
+    background: #2d0628 !important;
+    color: #ffffff !important;
+    outline: none; font-size: 15px; user-select: text;
 }
-#msg-input:focus { border-color: #e91e63; }
+#msg-input::placeholder { color: #d68fb8 !important; }
+#msg-input:focus { border-color: #ff0a54 !important; background: #380732 !important; }
 .send-btn {
-    background: #e91e63; width: 42px; height: 42px; border-radius: 50%;
-    display: flex; justify-content: center; align-items: center; font-size: 17px;
+    background: linear-gradient(135deg, #ff0a54, #c9184a) !important;
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; justify-content: center; align-items: center;
+    font-size: 18px; color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(255, 10, 84, 0.5);
 }
 
-/* Emoji & Sticker Panel */
+/* ==========================================
+   6. EMOJI & STICKER DRAWER
+   ========================================== */
 .extra-panel {
-    background: rgba(15, 2, 18, 0.95); height: 220px; display: flex;
-    flex-direction: column; border-top: 1px solid rgba(255,255,255,0.1);
+    background: #1f031b !important; height: 250px; display: flex;
+    flex-direction: column; border-top: 1px solid #ff4d88;
 }
-.tabs { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); }
-.tabs button { flex: 1; padding: 10px; background: none; border: none; color: white; opacity: 0.5; cursor: pointer; }
-.tabs button.active { opacity: 1; border-bottom: 2px solid #e91e63; color: #ff80ab; }
+.tabs { display: flex; background: #140111; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.tabs button {
+    flex: 1; padding: 10px 4px; background: none; border: none;
+    color: #b57c9e !important; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+.tabs button.active { color: #ff85a2 !important; border-bottom: 2.5px solid #ff0a54; }
 .panel-content {
     flex: 1; overflow-y: auto; padding: 12px; display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(42px, 1fr)); gap: 10px;
     justify-items: center; align-items: center;
 }
-.emoji-item { font-size: 26px; cursor: pointer; }
-.sticker-item { font-size: 45px; cursor: pointer; }
+.panel-content.sticker-grid {
+    grid-template-columns: repeat(2, 1fr); gap: 12px;
+}
+.emoji-item { font-size: 27px; cursor: pointer; transition: transform 0.1s; }
+.emoji-item:active { transform: scale(1.3); }
 
-/* Romantic Hearts Animation */
-#hearts-container { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 200; }
-.heart { position: absolute; bottom: -40px; animation: floatUp 3s ease-out forwards; }
+/* Floating Hearts Magic */
+#hearts-container { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 900; }
+.heart { position: absolute; bottom: -40px; animation: floatUp 3.2s ease-out forwards; }
 @keyframes floatUp {
     0% { transform: translateY(0) scale(0.6); opacity: 1; }
-    100% { transform: translateY(-92vh) scale(1.5) rotate(-15deg); opacity: 0; }
+    100% { transform: translateY(-95vh) scale(1.6) rotate(-15deg); opacity: 0; }
 }
