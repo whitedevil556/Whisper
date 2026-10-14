@@ -1,14 +1,14 @@
 {
-  "name": "CalcPro Utility",
-  "short_name": "CalcPro",
+  "name": "Brick Breaker Arcade",
+  "short_name": "BrickBreaker",
   "start_url": "/index.html",
   "display": "standalone",
-  "background_color": "#110112",
-  "theme_color": "#1f021e",
-  "description": "Scientific Calculator & System Utility",
+  "background_color": "#0b0e17",
+  "theme_color": "#0b0e17",
+  "description": "Classic Arcade Brick Breaker Game",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/2344/2344132.png",
+      "src": "https://cdn-icons-png.flaticon.com/512/808/808439.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
