@@ -42,7 +42,7 @@ const replyBar = document.getElementById('reply-bar');
 const replyText = document.getElementById('reply-text');
 
 // =========================================================
-// 2. BRICK BREAKER ARCADE GAME ENGINE (HTML5 Canvas)
+// 2. BRICK BREAKER ARCADE GAME ENGINE (Safe Canvas)
 // =========================================================
 const canvas = document.getElementById('brick-canvas');
 const ctx = canvas.getContext('2d');
@@ -67,6 +67,14 @@ function initBricks() {
 }
 initBricks();
 
+// मोबाईल्सवर क्रॅश होऊ नये म्हणून सुरक्षित रेक्टँगल फंक्शन
+function drawSafeRect(x, y, w, h, color) {
+    ctx.beginPath();
+    ctx.fillStyle = color;
+    ctx.fillRect(x, y, w, h);
+    ctx.closePath();
+}
+
 function drawGame() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -78,11 +86,7 @@ function drawGame() {
                 const bx = c * (brickInfo.width + brickInfo.padding) + brickInfo.offsetLeft;
                 const by = r * (brickInfo.height + brickInfo.padding) + brickInfo.offsetTop;
                 b.x = bx; b.y = by;
-                ctx.beginPath();
-                ctx.roundRect(bx, by, brickInfo.width, brickInfo.height, 5);
-                ctx.fillStyle = b.color;
-                ctx.fill();
-                ctx.closePath();
+                drawSafeRect(bx, by, brickInfo.width, brickInfo.height, b.color);
             }
         }
     }
@@ -95,11 +99,7 @@ function drawGame() {
     ctx.closePath();
 
     // Draw Paddle
-    ctx.beginPath();
-    ctx.roundRect(paddle.x, canvas.height - paddle.height - 12, paddle.width, paddle.height, 6);
-    ctx.fillStyle = '#00f5d4';
-    ctx.fill();
-    ctx.closePath();
+    drawSafeRect(paddle.x, canvas.height - paddle.height - 12, paddle.width, paddle.height, '#00f5d4');
 
     // Brick Collision
     for (let r = 0; r < brickInfo.rows; r++) {
@@ -142,7 +142,6 @@ function drawGame() {
 }
 drawGame();
 
-// Touch & Mouse Paddle Control
 function movePaddle(clientX) {
     const rect = canvas.getBoundingClientRect();
     const relX = (clientX - rect.left) * (canvas.width / rect.width);
@@ -170,7 +169,6 @@ document.getElementById('pause-game-btn').onclick = (e) => {
 let secretTaps = 0;
 let tapTimer = null;
 
-// 'BRICK BREAKER' Title var 4 vela click kelyas unlock modal ughdel
 document.getElementById('game-header-secret').onclick = () => {
     secretTaps++;
     clearTimeout(tapTimer);
@@ -196,7 +194,6 @@ function verifySecretPin() {
     const code = pinInput.value.trim();
     pinModal.classList.add('hidden');
 
-    // 1. REAL SECRET PIN (Khara Chat ughadnyasathi)
     if (code === CALC_PIN) {
         gameScreen.classList.add('hidden');
         if (!MY_USERNAME || !ROOM_ID || !SECRET_KEY) {
@@ -204,23 +201,17 @@ function verifySecretPin() {
         } else {
             openChatSession(ROOM_ID, SECRET_KEY, false);
         }
-    } 
-    // 2. FAKE DURESS PIN (0000) -> Fake Notes Ughadnyasathi
-    else if (code === '0000') {
+    } else if (code === '0000') {
         gameScreen.classList.add('hidden');
         openChatSession('study_notes_demo', 'fake_notes_key_0000', true);
-    } 
-    // 3. WRONG PIN -> Random Game Alerts (Camouflage)
-    else {
+    } else {
         const fakeGameAlerts = [
             "❌ Invalid Cheat Code!",
             "🔒 Stage Locked! Reach 50,000 score first to unlock.",
             "⚠️ Developer Mode Disabled by Admin.",
-            "👾 No hidden arcade level found for this code.",
-            "🕹️ Cheat activated: Unlimited Lives (Just Kidding!)"
+            "👾 No hidden arcade level found for this code."
         ];
-        const randomMsg = fakeGameAlerts[Math.floor(Math.random() * fakeGameAlerts.length)];
-        alert(randomMsg);
+        alert(fakeGameAlerts[Math.floor(Math.random() * fakeGameAlerts.length)]);
         gamePaused = false;
     }
 }
@@ -233,10 +224,9 @@ function lockToGame() {
     document.title = "Brick Breaker Arcade";
 }
 
-// Inactivity 60-Second Auto-Lock
 function resetInactivityTimer() {
     clearTimeout(inactivityTimer);
-    if ( gameScreen.classList.contains('hidden') ) {
+    if (gameScreen.classList.contains('hidden')) {
         inactivityTimer = setTimeout(lockToGame, 60000);
     }
 }
@@ -250,7 +240,6 @@ document.addEventListener('visibilitychange', () => {
 document.getElementById('panic-btn').onclick = lockToGame;
 document.getElementById('chat-header').ondblclick = lockToGame;
 
-// Anti-Peek Blur Curtain Toggle
 document.getElementById('peek-btn').onclick = (e) => {
     chatBox.classList.toggle('privacy-curtain');
     e.currentTarget.classList.toggle('active-mode');
@@ -300,7 +289,7 @@ function decryptPayload(cipherText) {
 }
 
 // =========================================================
-// 5. SETUP & SUPABASE REALTIME + LIVE PRESENCE
+// 5. SETUP & SUPABASE REALTIME
 // =========================================================
 document.getElementById('my-username').value = MY_USERNAME;
 document.getElementById('room-id').value = ROOM_ID;
@@ -332,7 +321,6 @@ async function openChatSession(roomToUse, keyToUse, isFakeMode) {
     appContainer.classList.remove('hidden');
     resetInactivityTimer();
 
-    // FAKE NOTES MODE (0000)
     if (isFakeMode) {
         roomTitle.innerText = "Self Notes 📝";
         connStatus.innerText = "🟢 Synced";
@@ -425,7 +413,6 @@ document.getElementById('burn-btn').onclick = (e) => {
     e.currentTarget.classList.toggle('active-mode', burnMode);
 };
 
-// Telegram Nuclear Wipe (Clear Chat for Both Sides + Database)
 document.getElementById('wipe-btn').onclick = async () => {
     if (!supabaseClient) return;
     if (confirm("🧹 Doghanchya phone varun ani Database madhun purna chat kayamche delete karayche ka?")) {
@@ -438,7 +425,6 @@ document.getElementById('wipe-btn').onclick = async () => {
 async function sendMessage(rawContent = msgInput.value, msgType = 'text', extraMeta = {}) {
     if (!rawContent || !rawContent.trim()) return;
 
-    // Handle Telegram Message Edit
     if (editingMsgId && msgType === 'text') {
         const metaObj = { text: rawContent, edited: true };
         const enc = encryptPayload(JSON.stringify(metaObj));
@@ -501,7 +487,6 @@ function renderMessageOnUI(msgObj) {
 
     populateBubbleHTML(msgDiv, msgObj, parsed, isMe);
 
-    // Click -> Open Telegram Action Menu (Reply, Edit, Copy, Delete for Everyone)
     msgDiv.onclick = (e) => {
         if (e.target.closest('.snap-open-btn') || e.target.closest('audio')) return;
         const sp = msgDiv.querySelector('.spoiler-text');
@@ -512,7 +497,6 @@ function renderMessageOnUI(msgObj) {
         openMessageMenu(msgObj, parsed, isMe);
     };
 
-    // Double Tap -> Heart Reaction ❤️
     msgDiv.ondblclick = (e) => {
         e.stopPropagation();
         addReactionBadge(msgObj.id, '❤️');
@@ -563,7 +547,6 @@ function populateBubbleHTML(msgDiv, msgObj, parsed, isMe) {
     msgDiv.innerHTML = `${senderHTML}${contentHTML}<span class="time">${editedTag}${time} ${tickHTML}</span>`;
 }
 
-// 👻 Snapchat 1-Time View Handler
 let activeSnapMsgId = null;
 window.openSnapPhoto = (msgId) => {
     const el = document.getElementById(`msg-${msgId}`);
@@ -584,7 +567,6 @@ document.getElementById('close-snap-btn').onclick = async () => {
     }
 };
 
-// ✈️ Telegram Message Context Menu
 const msgMenuModal = document.getElementById('msg-menu-modal');
 function openMessageMenu(msgObj, parsed, isMe) {
     selectedMsgObj = { msgObj, parsed, isMe };
@@ -709,7 +691,141 @@ micBtn.onclick = async () => {
 };
 
 // =========================================================
-// 8. FULL WHATSAPP EMOJIS, STICKERS & RECENT HISTORY
+// 8. FULL WHATSAPP EMOJIS, STICKERS & DIRECT DISPLAY
 // =========================================================
 let recentEmojis = JSON.parse(localStorage.getItem('whisper_recent_emojis')) || ['❤️','😍','😘','🥺','🔥','✨','🫂','💋'];
 let recentStickers = JSON.parse(localStorage.getItem('whisper_recent_stickers')) || [];
+
+const emojiSets = {
+    faces: ['😀','😃','😄','😁','😆','😅','😂','🤣','🥲','☺️','😊','😇','🙂','🙃','😉','😌','😍','🥰','😘','😗','😙','😚','😋','😛','😝','😜','🤪','🤨','🧐','🤓','😎','🥸','🤩','🥳','😏','😒','😞','😔','😟','😕','🙁','☹️','😣','😖','😫','😩','🥺','😢','😭','😤','😠','😡','🤬','🤯','😳','🥵','🥶','😱','😨','😰','😥','😓','🫣','🤭','🫢','🫡','🤫','🫠','🤥','😶','🫥','😐','🫤','😑','😬','🙄','😯','😦','😧','😮','😲','🥱','😴','🤤','😪','😮‍💨','😵','😵‍💫','🤐','🥴','🤢','🤮','🤧','😷','🤒','🤕','🤑','🤠','😈','👿','👻','💀','👽','🤖','😺','😸','😹','😻','😼','😽'],
+    love: ['❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❤️‍🔥','❤️‍🩹','❣️','💕','💞','💓','💗','💖','💘','💝','💟','💌','🫂','💋','🫦','💑','👩‍❤️‍👨','💏','🌹','🥀','🌷','🌺','🌸','💍','💎','🧸','🍫','🥂','🍷','🌙','✨','🔥'],
+    nature: ['🐶','🐱','🐭','🐹','🐰','🦊','🐻','🐼','🐨','🐯','🦁','🐮','🐷','🐸','🐵','🐔','🐧','🐦','🐤','🦆','🦅','🦉','🦇','🐺','🐴','🦄','🐝','🦋','🐞','🐢','🐍','🐙','🐬','🐳','🦈','🐅','🐆','🐘','🦒','🦘','🐕','🐈','🕊️','🐇','🐿️','🐾','🌵','🎄','🌲','🌳','🌴','🌱','🌿','🍀','🍃','🌺','🌸','🌼','🌻','🌞','🌝','🌙','🌎','🪐','💫','⭐️','🌟','✨','⚡️','🔥','🌈','☀️','❄️','🌊'],
+    food: ['🍏','🍎','🍊','🍋','🍌','🍉','🍇','🍓','🫐','🍒','🍑','🥭','🍍','🥥','🥝','🍅','🥑','🍔','🍟','🍕','🥪','🌮','🌯','🥗','🍝','🍜','🍲','🍛','🍣','🍱','🥟','🍤','🍙','🍚','🍧','🍨','🍦','🧁','🍰','🎂','🍮','🍭','🍬','🍫','🍿','🍩','🍪','☕','🍵','🥤','🧋','🍺','🍻','🥂','🍷','🍸','🍹'],
+    activities: ['⚽','🏀','🏈','⚾','🎾','🏐','🏉','🎱','🏓','🏸','🏏','⛳','🥊','🥋','⛸️','🎿','🏋️','🤸','🏊','🚴','🏆','🥇','🎖️','🎪','🎭','🎨','🎬','🎤','🎧','🎼','🎹','🥁','🎷','🎺','🎸','🎻','🎲','♟️','🎯','🎳','🎮','🧩'],
+    recent: recentEmojis
+};
+
+const romanticStickers = [
+    "💖 I Love You So Much!", "🥺 Miss You Khup Sara...", "🫂 Tight Wala Hug!", "💋 Muahhhh! Kiss For You",
+    "🌹 Only Yours Forever", "🌙 Good Night Jaan ✨", "☀️ Good Morning Love ❤️", "😘 Jevlas Ka Shona?",
+    "💍 Marry Me Soon!", "🔥 Looking Hot Ha!", "🧸💞", "👩‍❤️‍💋‍👨💖", "😡 Kalti Maar", "😂 LOL", "🤦‍♂️ Deva!", 
+    "🎂 Happy Birthday!", "🎉 Congratulations!", "💯 Ek Number", "🍻 Cheers Bhava", "🙏 Sorry Shona",
+    "🥺 Please Maaf Kar Na", "😍 Tu Khup Sundar Ahes", "🥰 Mazi Jaan", "😎 Swag", "😤 Tuza Rag",
+    "💔 Heartbroken", "👀 Kay Chalay?", "🏃‍♂️ Yetoy 5 Min", "👋 Bye Cya"
+];
+
+// Tabs setup
+const tabsContainer = document.querySelector('.tabs');
+if (tabsContainer) {
+    tabsContainer.innerHTML = `
+        <button id="tab-faces" class="active" title="Faces">😀</button>
+        <button id="tab-love" title="Love">❤️</button>
+        <button id="tab-nature" title="Nature">🐻</button>
+        <button id="tab-food" title="Food">🍔</button>
+        <button id="tab-activities" title="Activities">⚽</button>
+        <button id="tab-recent" title="Recent">🕒</button>
+        <button id="tab-sticker" title="Stickers">💌</button>
+    `;
+}
+
+function saveRecentEmoji(emj) {
+    recentEmojis = [emj, ...recentEmojis.filter(e => e !== emj)].slice(0, 36);
+    localStorage.setItem('whisper_recent_emojis', JSON.stringify(recentEmojis));
+    emojiSets.recent = recentEmojis;
+}
+
+function saveRecentSticker(stk) {
+    recentStickers = [stk, ...recentStickers.filter(s => s !== stk)].slice(0, 10);
+    localStorage.setItem('whisper_recent_stickers', JSON.stringify(recentStickers));
+}
+
+function renderEmojiCategory(cat) {
+    panelContent.classList.remove('sticker-grid');
+    const list = emojiSets[cat] && emojiSets[cat].length > 0 ? emojiSets[cat] : emojiSets.faces;
+    panelContent.innerHTML = list.map(e => `<span class="emoji-item">${e}</span>`).join('');
+}
+
+function renderStickers() {
+    panelContent.classList.add('sticker-grid');
+    let html = '';
+    if (recentStickers.length > 0) {
+        html += `<div style="grid-column:1/-1; color:#ff85a2; font-size:12px; font-weight:bold; width:100%;">🕒 Recently Used</div>`;
+        html += recentStickers.map(s => `<div class="romantic-sticker-badge sticker-item">${escapeHTML(s)}</div>`).join('');
+        html += `<div style="grid-column:1/-1; color:#ff85a2; font-size:12px; font-weight:bold; width:100%; margin-top:8px;">💌 All Stickers</div>`;
+    }
+    html += romanticStickers.map(s => `<div class="romantic-sticker-badge sticker-item">${escapeHTML(s)}</div>`).join('');
+    panelContent.innerHTML = html;
+}
+
+// Event Delegation (इमोजी क्लिक फास्ट आणि १००% काम करण्यासाठी)
+panelContent.onclick = (e) => {
+    const item = e.target.closest('.emoji-item');
+    const sticker = e.target.closest('.sticker-item');
+    if (item) {
+        const char = item.textContent.trim();
+        msgInput.value += char;
+        msgInput.focus();
+        saveRecentEmoji(char);
+    } else if (sticker) {
+        const text = sticker.textContent.trim();
+        sendMessage(text, 'sticker');
+        saveRecentSticker(text);
+    }
+};
+
+function setActiveTab(btnId) {
+    ['tab-faces', 'tab-love', 'tab-nature', 'tab-food', 'tab-activities', 'tab-recent', 'tab-sticker'].forEach(id => {
+        const btn = document.getElementById(id);
+        if (btn) btn.classList.toggle('active', id === btnId);
+    });
+}
+
+// इमोजी बटन दाबताच थेट 'Faces' (स्मायलीज) उघडतील
+document.getElementById('toggle-emoji').onclick = () => {
+    extraPanel.classList.toggle('hidden');
+    if (!extraPanel.classList.contains('hidden')) {
+        setActiveTab('tab-faces');
+        renderEmojiCategory('faces');
+    }
+};
+
+document.getElementById('tab-faces').onclick = () => { setActiveTab('tab-faces'); renderEmojiCategory('faces'); };
+document.getElementById('tab-love').onclick = () => { setActiveTab('tab-love'); renderEmojiCategory('love'); };
+document.getElementById('tab-nature').onclick = () => { setActiveTab('tab-nature'); renderEmojiCategory('nature'); };
+document.getElementById('tab-food').onclick = () => { setActiveTab('tab-food'); renderEmojiCategory('food'); };
+document.getElementById('tab-activities').onclick = () => { setActiveTab('tab-activities'); renderEmojiCategory('activities'); };
+document.getElementById('tab-recent').onclick = () => { setActiveTab('tab-recent'); renderEmojiCategory('recent'); };
+document.getElementById('tab-sticker').onclick = () => { setActiveTab('tab-sticker'); renderStickers(); };
+
+msgInput.oninput = () => {
+    if (realtimeChannel) realtimeChannel.send({ type: 'broadcast', event: 'typing', payload: { user: MY_USERNAME } });
+};
+
+sendBtn.onclick = () => sendMessage();
+msgInput.onkeypress = (e) => { if (e.key === 'Enter') sendMessage(); };
+
+function checkRomanticKeywords(text) {
+    const lower = text.toLowerCase();
+    if (lower.includes('love') || lower.includes('miss') || lower.includes('❤️') || lower.includes('kiss') || lower.includes('jaan') || lower.includes('shona')) {
+        createHeartMagic();
+    }
+}
+
+function createHeartMagic() {
+    const container = document.getElementById('hearts-container');
+    for (let i = 0; i < 18; i++) {
+        setTimeout(() => {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerText = ['❤️', '💖', '💕', '💘', '💋', '✨'][Math.floor(Math.random() * 6)];
+            heart.style.left = Math.random() * 92 + '%';
+            heart.style.fontSize = (Math.random() * 18 + 20) + 'px';
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 3200);
+        }, i * 85);
+    }
+}
+
+function escapeHTML(str) {
+    return String(str).replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag]));
+}
